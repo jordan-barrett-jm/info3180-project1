@@ -7,6 +7,7 @@ This file creates your application.
 
 from app import app
 from flask import render_template, request, redirect, url_for
+from .forms import PropertyForm
 
 
 ###
@@ -62,6 +63,25 @@ def page_not_found(error):
     """Custom 404 page."""
     return render_template('404.html'), 404
 
+#Property-related routes
+
+@app.route('/properties/create', methods=['POST', 'GET'])
+def createProperty():
+    form = PropertyForm()
+    if request.method == 'POST':
+        # Get property data and save to database and file repository
+        if form.validate_on_submit():
+            f = form.image.data
+            filename = secure_filename(f.filename)
+            f.save(
+                os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], filename)
+            )
+            flash('File Saved', 'success')
+            return redirect(url_for('home'))
+        else:
+            print ("Invalid Form Submission")
+
+    return render_template('properyForm.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0",port="8080")

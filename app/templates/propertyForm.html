@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>Add Property</h1>
+<p>Please fill out the following fields to add a property</p>
+<form method="POST" action="/contact">
+    {{ form.csrf_token }}
+    {{ form.title.label }}
+    <br>
+    {{ form.title(size=80) }}
+    <br>
+    {{ form.num_bedrooms.label }}
+    <br>
+    {{ form.num_bedrooms(size=2) }}
+    <br>
+    {{ form.num_bathrooms.label }}
+    <br>
+    {{ form.num_bathrooms(size=2) }}
+    <br>
+    {{ form.location.label }}
+    <br>
+    {{ form.location(size=40) }}
+    <br>
+    {{ form.price.label }}
+    <br>
+    {{ form.price(size=10) }}
+    <br>
+    {{ form.description.label }}
+    <br>
+    {{ form.description(size=255) }}
+    <br>
+    {{ form.photo.label }}
+    <br>
+    {{ form.image }}
+    <input type="submit" value="Go">
+</form>
+{% endblock %}
