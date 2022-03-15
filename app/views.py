@@ -5,9 +5,12 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app
-from flask import render_template, request, redirect, url_for
+from app import app, db
+from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from .forms import PropertyForm
+from app.models import Property
+from werkzeug.utils import secure_filename
+import os
 
 
 ###
@@ -69,19 +72,30 @@ def page_not_found(error):
 def createProperty():
     form = PropertyForm()
     if request.method == 'POST':
+        print (form.data)
         # Get property data and save to database and file repository
         if form.validate_on_submit():
-            f = form.image.data
-            filename = secure_filename(f.filename)
-            f.save(
-                os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], filename)
+            #first, save the property image added
+            property_image = form.photo.data
+            property_filename = secure_filename(property_image.filename)
+            property_image.save(
+                os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], property_filename)
             )
+            #next, create the property object and save it to the database
+            property = Property(form.title.data, form.num_bedrooms.data,
+                                form.num_bathrooms.data, form.description.data,
+                                form.location.data, form.property_type.data,
+                                form.price.data, property_filename)
+            db.session.add(property)
+            db.session.commit()
             flash('File Saved', 'success')
             return redirect(url_for('home'))
         else:
+            print (form.errors)
             print ("Invalid Form Submission")
 
-    return render_template('properyForm.html', form=form)
+    return render_template('propertyForm.html', form=form)
+
 
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0",port="8080")

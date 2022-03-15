@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+
 {% block main %}
 <h1>Add Property</h1>
 <p>Please fill out the following fields to add a property</p>
-<form method="POST" action="/contact">
+<form method="POST" action={{ url_for('createProperty') }} enctype="multipart/form-data">
     {{ form.csrf_token }}
     {{ form.title.label }}
     <br>
@@ -20,6 +21,10 @@
     <br>
     {{ form.location(size=40) }}
     <br>
+    {{ form.property_type.label }}
+    <br>
+    {{ form.property_type }}
+    <br>
     {{ form.price.label }}
     <br>
     {{ form.price(size=10) }}
@@ -30,7 +35,23 @@
     <br>
     {{ form.photo.label }}
     <br>
-    {{ form.image }}
-    <input type="submit" value="Go">
+    {{ form.photo }}
+    <br>
+    <br>
+    <input type="submit" value="Submit">
 </form>
+
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+
 {% endblock %}
