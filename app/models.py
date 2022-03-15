@@ -1,7 +1,7 @@
 from . import db
 
 class Property(db.Model):
-    __tablename__ = 'properties'
+    __tablename__ = 'properties_table'
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))
@@ -17,7 +17,8 @@ class Property(db.Model):
     description, location, property_type, price,
     photo):
         self.title = title
-        self.num_bathrooms = num_bedrooms
+        self.num_bedrooms = num_bedrooms
+        self.num_bathrooms = num_bathrooms
         self.description = description
         self.location = location
         self.property_type = property_type
