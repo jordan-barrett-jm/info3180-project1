@@ -88,8 +88,8 @@ def createProperty():
                                 form.price.data, property_filename)
             db.session.add(property)
             db.session.commit()
-            flash('File Saved', 'success')
-            return redirect(url_for('home'))
+            flash('Property Added successfully.')
+            return redirect(url_for('getProperties'))
         else:
             print (form.errors)
             print ("Invalid Form Submission")
