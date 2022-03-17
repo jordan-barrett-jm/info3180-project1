@@ -96,6 +96,30 @@ def createProperty():
 
     return render_template('propertyForm.html', form=form)
 
+@app.route('/properties', methods=['GET'])
+def getProperties():
+    properties = Property.query.all()
+    return render_template('properties.html', properties=properties)
+
+@app.route('/properties/<propertyid>', methods=['GET'])
+def getProperty(propertyid):
+    property = Property.query.filter_by(id=propertyid).first()
+    return render_template('propertyDetail.html', property=property)
+
+@app.route('/uploads/<filename>', methods=['GET'])
+def get_image(filename):
+    return send_from_directory(os.path.join(os.getcwd(), 
+    app.config['UPLOAD_FOLDER']), filename)
+
+def get_uploaded_images():
+    upload_dir = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])
+    file_list = []
+    for  subdir, dirs, files in os.walk(upload_dir):
+        for file in files:
+            if file.endswith(".jpeg") or file.endswith('.png') or file.endswith('.jpg'):
+             file_list.append(file)
+    print (file_list)
+    return file_list
 
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0",port="8080")
